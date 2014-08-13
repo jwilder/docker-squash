@@ -129,7 +129,7 @@ func main() {
 		return
 	}
 
-	debugf("Tarring up squased layer %s\n", newEntry.LayerConfig.Id[:12])
+	debugf("Tarring up squashed layer %s\n", newEntry.LayerConfig.Id[:12])
 	// create a layer.tar from our squashed layer
 	newEntry.TarLayer()
 
