@@ -8,15 +8,19 @@ import (
 	"strings"
 )
 
+var buildVersion string
+
 func main() {
 	var from, input, output, tempdir, tag string
-	var keepTemp bool
+	var keepTemp, version bool
 	flag.StringVar(&input, "i", "", "Read from a tar archive file, instead of STDIN")
 	flag.StringVar(&output, "o", "", "Write to a file, instead of STDOUT")
 	flag.StringVar(&tag, "t", "", "Repository name and tag for new image")
 	flag.StringVar(&from, "from", "", "Squash from layer ID (default is root)")
 	flag.BoolVar(&keepTemp, "keepTemp", false, "Keep temp dir when done. (Useful for debugging)")
 	flag.BoolVar(&verbose, "verbose", false, "Enable verbose logging")
+	flag.BoolVar(&version, "v", false, "Print version information and quit")
+
 	flag.Usage = func() {
 		fmt.Printf("\nUsage: docker-squash [options]\n\n")
 		fmt.Printf("Squashes the layers of a tar archive on STDIN and streams it to STDOUT\n\n")
@@ -24,6 +28,11 @@ func main() {
 		flag.PrintDefaults()
 	}
 	flag.Parse()
+
+	if version {
+		fmt.Println(buildVersion)
+		return
+	}
 
 	var err error
 	tempdir, err = ioutil.TempDir("", "docker-squash")
