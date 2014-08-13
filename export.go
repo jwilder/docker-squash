@@ -44,24 +44,28 @@ func (p Port) Proto() string {
 }
 
 type ContainerConfig struct {
-	Hostname     string
-	User         string
-	Memory       int64
-	MemorySwap   int64
-	CpuShares    int64
-	AttachStdin  bool
-	AttachStdout bool
-	AttachStderr bool
-	PortSpecs    []string
-	Tty          bool
-	OpenStdin    bool
-	StdinOnce    bool
-	Env          []string
-	Cmd          []string
-	Dns          []string
-	Image        string
-	Volumes      []string
-	VolumesFrom  string
+	Hostname        string
+	Domainname      string
+	Entrypoint      []string
+	User            string
+	Memory          int64
+	MemorySwap      int64
+	CpuShares       int64
+	AttachStdin     bool
+	AttachStdout    bool
+	AttachStderr    bool
+	PortSpecs       []string
+	Tty             bool
+	OpenStdin       bool
+	StdinOnce       bool
+	NetworkDisabled bool
+	OnBuild         []string
+	Env             []string
+	Cmd             []string
+	Dns             []string
+	Image           string
+	Volumes         map[string]struct{}
+	VolumesFrom     string
 }
 
 type Config struct {
@@ -76,6 +80,7 @@ type Config struct {
 	AttachStderr    bool
 	PortSpecs       []string
 	ExposedPorts    map[Port]struct{}
+	OnBuild         []string
 	Tty             bool
 	OpenStdin       bool
 	StdinOnce       bool
@@ -98,8 +103,8 @@ type LayerConfig struct {
 	ContainerConfig *ContainerConfig `json:"container_config"`
 	Container       string           `json:"container"`
 	Config          *Config          `json:"config,omitempty"`
-	DockerVersion   string
-	Architecture    string
+	DockerVersion   string           `json:"docker_version"`
+	Architecture    string           `json:"architecture"`
 }
 
 // LoadExport loads a tarball export created by docker save.
@@ -148,6 +153,7 @@ func LoadExport(image, location string) (*Export, error) {
 			LayerTarPath: filepath.Join(export.Path, dir.Name(), "layer.tar"),
 			LayerDirPath: filepath.Join(export.Path, dir.Name(), "layer"),
 		}
+
 		err := readJsonFile(entry.JsonPath, &entry.LayerConfig)
 		if err != nil {
 			return nil, err
@@ -322,6 +328,7 @@ func (e *Export) InsertLayer(parent string) (*ExportedImage, error) {
 		LayerDirPath: filepath.Join(e.Path, id, "layer"),
 		LayerConfig:  layerConfig,
 	}
+	entry.LayerConfig.Created = time.Now().UTC()
 
 	err = entry.CreateDirs()
 	if err != nil {
@@ -393,6 +400,8 @@ func (e *Export) ReplaceLayer(oldId string) (*ExportedImage, error) {
 		LayerDirPath: filepath.Join(location, id, "layer"),
 		LayerConfig:  layerConfig,
 	}
+	entry.LayerConfig.Created = time.Now().UTC()
+
 	err = entry.WriteJson()
 	if err != nil {
 		return nil, err
