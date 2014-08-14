@@ -83,12 +83,13 @@ func main() {
 				return
 			}
 		}
-
-		if start == nil {
-			fatalf("no layer matching %s\n", from)
-			return
-		}
 	}
+
+	if start == nil {
+		fatalf("no layer matching %s\n", from)
+		return
+	}
+
 	// extract each "layer.tar" to "layer" dir
 	err = export.ExtractLayers()
 	if err != nil {
