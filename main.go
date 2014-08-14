@@ -43,12 +43,10 @@ func main() {
 	if tag != "" {
 		if !strings.Contains(tag, ":") {
 			fatalf("bad tag format: %s\n", tag)
-			return
 		}
 		parts := strings.Split(tag, ":")
 		if parts[0] == "" || parts[1] == "" {
 			fatalf("bad tag format: %s\n", tag)
-			return
 		}
 	}
 
@@ -62,13 +60,11 @@ func main() {
 	export, err := LoadExport(input, tempdir)
 	if err != nil {
 		fatal(err)
-		return
 	}
 
 	if len(export.Repositories) > 0 {
 		fatal("This image is a full repository export w/ multiple images in it.  " +
 			"You need to generate the export from a specific image ID or tag.")
-		return
 	}
 
 	start := export.FirstFrom()
@@ -80,7 +76,6 @@ func main() {
 			start, err = export.GetById(from)
 			if err != nil {
 				fatal(err)
-				return
 			}
 		}
 	}
@@ -136,11 +131,17 @@ func main() {
 
 	debugf("Tarring up squashed layer %s\n", newEntry.LayerConfig.Id[:12])
 	// create a layer.tar from our squashed layer
-	newEntry.TarLayer()
+	err = newEntry.TarLayer()
+	if err != nil {
+		fatal(err)
+	}
 
 	debugf("Removing extracted layers\n")
 	// remove our expanded "layer" dirs
-	export.RemoveExtractedLayers()
+	err = export.RemoveExtractedLayers()
+	if err != nil {
+		fatal(err)
+	}
 
 	if tag != "" {
 		parts := strings.Split(tag, ":")
@@ -153,7 +154,6 @@ func main() {
 		err := export.WriteRepositoriesJson()
 		if err != nil {
 			fatal(err)
-			return
 		}
 	}
 
@@ -163,14 +163,16 @@ func main() {
 		ow, err = os.Create(output)
 		if err != nil {
 			fatal(err)
-			return
 		}
 		debugf("Tarring new image to %s\n", output)
 	} else {
 		debugf("Tarring new image to STDOUT\n")
 	}
 	// bundle up the new image
-	export.TarLayers(ow)
+	err = export.TarLayers(ow)
+	if err != nil {
+		fatal(err)
+	}
 
 	debug("Done. New image created.")
 

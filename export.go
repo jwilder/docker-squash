@@ -516,8 +516,14 @@ func (e *Export) TarLayers(w io.Writer) error {
 		return err
 	}
 
-	io.Copy(w, stdout)
-	io.Copy(os.Stderr, stderr)
+	_, err = io.Copy(w, stdout)
+	if err != nil {
+		return err
+	}
+	_, err = io.Copy(os.Stderr, stderr)
+	if err != nil {
+		return err
+	}
 
 	if err := cmd.Wait(); err != nil {
 		return err
