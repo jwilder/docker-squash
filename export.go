@@ -169,7 +169,7 @@ func LoadExport(image, location string) (*Export, error) {
 
 	debugf("Loaded image w/ %s layers\n", strconv.FormatInt(int64(len(export.Entries)), 10))
 	for repo, tags := range export.Repositories {
-		debugf("  - %s (%s tags)\n", repo, strconv.FormatInt(int64(len(*tags)), 10))
+		debugf("  -  %s (%s tags)\n", repo, strconv.FormatInt(int64(len(*tags)), 10))
 	}
 	return export, err
 }
@@ -228,7 +228,7 @@ func (e *Export) ExtractLayers() error {
 	debug("Extracting layers...")
 
 	for _, entry := range e.Entries {
-		debugf(" - %s\n", entry.LayerTarPath)
+		debugf("  -  %s\n", entry.LayerTarPath)
 		err := entry.ExtractLayerDir()
 		if err != nil {
 			return err
@@ -306,7 +306,7 @@ func (e *Export) PrintHistory() {
 		if len(cmd) > 60 {
 			cmd = cmd[0:57] + "..."
 		}
-		debug("  -", order[i].LayerConfig.Id[0:12],
+		debug("  - ", order[i].LayerConfig.Id[0:12],
 			humanDuration(time.Now().UTC().Sub(order[i].LayerConfig.Created.UTC())),
 			cmd, units.HumanSize(size))
 	}
@@ -373,7 +373,7 @@ func (e *Export) ReplaceLayer(oldId string) (*ExportedImage, error) {
 		cmd = cmd[:47] + "..."
 	}
 
-	debugf("  - Replacing %s w/ new layer %s (%s)\n", oldId[:12], id[:12], cmd)
+	debugf("  -  Replacing %s w/ new layer %s (%s)\n", oldId[:12], id[:12], cmd)
 	if child != nil {
 		child.LayerConfig.Parent = id
 		err = child.WriteJson()
@@ -457,13 +457,13 @@ func (e *Export) SquashLayers(to, from *ExportedImage) error {
 			return err
 		}
 	}
-	debug("  - Deleting whiteouts")
+	debug("  -  Deleting whiteouts")
 	err = e.deleteWhiteouts(layerDir)
 	if err != nil {
 		return err
 	}
 
-	debug("  - Rewriting child history")
+	debug("  -  Rewriting child history")
 	return e.rewriteChildren(from)
 }
 
@@ -545,7 +545,7 @@ func (e *Export) rewriteChildren(entry *ExportedImage) error {
 
 			entry = e.ChildOf(newEntry.LayerConfig.Id)
 		} else {
-			debugf("  - Removing %s. Squashed. (%s)\n", entry.LayerConfig.Id[:12], cmd)
+			debugf("  -  Removing %s. Squashed. (%s)\n", entry.LayerConfig.Id[:12], cmd)
 			err := os.RemoveAll(entry.Path)
 			if err != nil {
 				return err
