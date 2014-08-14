@@ -73,10 +73,15 @@ func main() {
 
 	start := export.FirstFrom()
 	if from != "" {
-		start, err = export.GetById(from)
-		if err != nil {
-			fatal(err)
-			return
+
+		if from == "root" {
+			start = export.Root()
+		} else {
+			start, err = export.GetById(from)
+			if err != nil {
+				fatal(err)
+				return
+			}
 		}
 
 		if start == nil {
