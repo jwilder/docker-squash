@@ -28,7 +28,7 @@ func fatalf(format string, args ...interface{}) {
 
 func fatal(args ...interface{}) {
 	if verbose {
-		fmt.Print(os.Stderr, "ERROR: ")
+		fmt.Fprint(os.Stderr, "ERROR: ")
 		fmt.Fprintln(os.Stderr, args...)
 		os.Exit(1)
 	}

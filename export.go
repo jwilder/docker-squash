@@ -241,16 +241,16 @@ func (e *Export) FirstFrom() *ExportedImage {
 	root := e.Root()
 	for {
 		if root == nil {
-			return nil
+			break
 		}
 
 		cmd := strings.Join(root.LayerConfig.ContainerConfig.Cmd, " ")
 		if strings.Contains(cmd, "#(nop) ADD file") {
-			return root
+			break
 		}
 		root = e.ChildOf(root.LayerConfig.Id)
 	}
-	return nil
+	return root
 }
 
 // Root returns the top layer in the export
@@ -262,11 +262,11 @@ func (e *Export) LastChild() *ExportedImage {
 	c := e.Root()
 	for {
 		if e.ChildOf(c.LayerConfig.Id) == nil {
-			return c
+			break
 		}
 		c = e.ChildOf(c.LayerConfig.Id)
 	}
-	return nil
+	return c
 }
 
 // ChildOf returns the child layer or nil of the parent
@@ -290,7 +290,7 @@ func (e *Export) GetById(idPrefix string) (*ExportedImage, error) {
 	}
 
 	if len(matches) > 1 {
-		return nil, errors.New(fmt.Sprintf("%s is ambiguous. %s matched.", idPrefix, len(matches)))
+		return nil, errors.New(fmt.Sprintf("%s is ambiguous. %d matched.", idPrefix, len(matches)))
 	}
 
 	if len(matches) == 0 {
