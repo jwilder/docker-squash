@@ -335,7 +335,7 @@ func (e *Export) InsertLayer(parent string) (*ExportedImage, error) {
 	}
 
 	layerConfig := newLayerConfig(id, parent, "squashed w/ docker-squash")
-	layerConfig.ContainerConfig.Cmd = []string{"/bin/sh", "-c", fmt.Sprintf("#(squash from %s)", parent[:12])}
+	layerConfig.ContainerConfig.Cmd = []string{"/bin/sh", "-c", fmt.Sprintf("#(squash) from %s", parent[:12])}
 	entry := &ExportedImage{
 		Path:         filepath.Join(e.Path, id),
 		JsonPath:     filepath.Join(e.Path, id, "json"),
