@@ -194,9 +194,9 @@ func main() {
 	}
 
 	debug("Done. New image created.")
-	signals <- os.Interrupt
-	wg.Wait()
 	// print our new history
 	export.PrintHistory()
 
+	signals <- os.Interrupt
+	wg.Wait()
 }
