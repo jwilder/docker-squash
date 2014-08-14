@@ -5,10 +5,28 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"os/signal"
 	"strings"
+	"sync"
+	"syscall"
 )
 
-var buildVersion string
+var (
+	buildVersion string
+	signals      chan os.Signal
+	wg           sync.WaitGroup
+)
+
+func shutdown(tempdir string) {
+	defer wg.Done()
+	<-signals
+	debugf("Removing tempdir %s\n", tempdir)
+	err := os.RemoveAll(tempdir)
+	if err != nil {
+		fatal(err)
+	}
+
+}
 
 func main() {
 	var from, input, output, tempdir, tag string
@@ -50,11 +68,12 @@ func main() {
 		}
 	}
 
+	signals = make(chan os.Signal, 1)
+
 	if !keepTemp {
-		defer func() {
-			debugf("Removing tempdir %s\n", tempdir)
-			os.RemoveAll(tempdir)
-		}()
+		wg.Add(1)
+		signal.Notify(signals, os.Interrupt, os.Kill, syscall.SIGTERM)
+		go shutdown(tempdir)
 	}
 
 	export, err := LoadExport(input, tempdir)
@@ -175,7 +194,9 @@ func main() {
 	}
 
 	debug("Done. New image created.")
-
+	signals <- os.Interrupt
+	wg.Wait()
 	// print our new history
 	export.PrintHistory()
+
 }
