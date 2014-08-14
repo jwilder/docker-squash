@@ -71,8 +71,7 @@ func main() {
 		return
 	}
 
-	root := export.Root()
-	start := root
+	start := export.FirstFrom()
 	if from != "" {
 		start, err = export.GetById(from)
 		if err != nil {

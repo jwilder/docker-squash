@@ -237,6 +237,22 @@ func (e *Export) ExtractLayers() error {
 	return nil
 }
 
+func (e *Export) FirstFrom() *ExportedImage {
+	root := e.Root()
+	for {
+		if root == nil {
+			return nil
+		}
+
+		cmd := strings.Join(root.LayerConfig.ContainerConfig.Cmd, " ")
+		if strings.Contains(cmd, "#(nop) ADD file") {
+			return root
+		}
+		root = e.ChildOf(root.LayerConfig.Id)
+	}
+	return nil
+}
+
 // Root returns the top layer in the export
 func (e *Export) Root() *ExportedImage {
 	return e.ChildOf("")
