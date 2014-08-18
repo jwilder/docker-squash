@@ -81,12 +81,26 @@ func main() {
 		fatal(err)
 	}
 
-	if len(export.Repositories) > 0 {
-		fatal("This image is a full repository export w/ multiple images in it.  " +
-			"You need to generate the export from a specific image ID or tag.")
+	// Export may have multiple branches with the same parent.
+	// We can't handle that currently so abort.
+	for _, v := range export.Repositories {
+		commits := map[string]string{}
+		for tag, commit := range *v {
+			commits[commit] = tag
+		}
+		if len(commits) > 1 {
+			fatal("This image is a full repository export w/ multiple images in it.  " +
+				"You need to generate the export from a specific image ID or tag.")
+		}
+
 	}
 
 	start := export.FirstFrom()
+	// Can't find a FROM, default to root
+	if start == nil {
+		start = export.Root()
+	}
+
 	if from != "" {
 
 		if from == "root" {
