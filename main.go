@@ -95,7 +95,11 @@ func main() {
 
 	}
 
-	start := export.FirstFrom()
+	start := export.FirstSquash()
+	// Can't find a previously squashed layer, use first FROM
+	if start == nil {
+		start = export.FirstFrom()
+	}
 	// Can't find a FROM, default to root
 	if start == nil {
 		start = export.Root()
