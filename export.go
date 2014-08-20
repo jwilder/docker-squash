@@ -237,7 +237,7 @@ func (e *Export) ExtractLayers() error {
 	return nil
 }
 
-func (e *Export) FirstFrom() *ExportedImage {
+func (e *Export) firstLayer(pattern string) *ExportedImage {
 	root := e.Root()
 	for {
 		if root == nil {
@@ -245,12 +245,20 @@ func (e *Export) FirstFrom() *ExportedImage {
 		}
 
 		cmd := strings.Join(root.LayerConfig.ContainerConfig.Cmd, " ")
-		if strings.Contains(cmd, "#(nop) ADD file") {
+		if strings.Contains(cmd, pattern) {
 			break
 		}
 		root = e.ChildOf(root.LayerConfig.Id)
 	}
 	return root
+}
+
+func (e *Export) FirstFrom() *ExportedImage {
+	return e.firstLayer("#(nop) ADD file")
+}
+
+func (e *Export) FirstSquash() *ExportedImage {
+	return e.firstLayer("#(squash)")
 }
 
 // Root returns the top layer in the export
