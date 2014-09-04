@@ -141,7 +141,7 @@ disk storage:
 $ docker save <image_id> | sudo TMPDIR=/var/run/shm docker-squash -t newtag | docker load
 ```
 
-By default, a squashed layer is inserted after the first `FROM` layer.  You can specify a differnt
+By default, a squashed layer is inserted after the first `FROM` layer.  You can specify a different
 layer with the `-from` argument.
 ```
 $ docker save <image_id> | sudo docker-squash -from <other layer> -t newtag | docker load
