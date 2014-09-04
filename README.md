@@ -108,6 +108,10 @@ $ sudo tar -C /usr/local/bin -xzvf docker-gen-linux-amd64-v0.0.8.tar.gz
 ```
 NOTE: docker-squash must run as root (to maintain file permission created within images).
 
+Dependencies:
+
+* [tar 1.27](http://www.gnu.org/software/tar/)
+
 ## Usage
 
 docker-squash works by squashing a saved image and loading the squashed image back into docker.
