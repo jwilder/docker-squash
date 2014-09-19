@@ -96,15 +96,34 @@ type Config struct {
 }
 
 type LayerConfig struct {
-	Id              string           `json:"id"`
-	Parent          string           `json:"parent,omitempty"`
-	Comment         string           `json:"comment"`
-	Created         time.Time        `json:"created"`
-	ContainerConfig *ContainerConfig `json:"container_config"`
-	Container       string           `json:"container"`
-	Config          *Config          `json:"config,omitempty"`
-	DockerVersion   string           `json:"docker_version"`
-	Architecture    string           `json:"architecture"`
+	Id                string           `json:"id"`
+	Parent            string           `json:"parent,omitempty"`
+	Comment           string           `json:"comment"`
+	Created           time.Time        `json:"created"`
+	V1ContainerConfig *ContainerConfig `json:"ContainerConfig,omitempty"`  // Docker 1.0.0, 1.0.1
+	V2ContainerConfig *ContainerConfig `json:"container_config,omitempty"` // All other versions
+	Container         string           `json:"container"`
+	Config            *Config          `json:"config,omitempty"`
+	DockerVersion     string           `json:"docker_version"`
+	Architecture      string           `json:"architecture"`
+}
+
+func (l *LayerConfig) ContainerConfig() *ContainerConfig {
+	if l.V2ContainerConfig != nil {
+		return l.V2ContainerConfig
+	}
+
+	// If the exports use the 1.0.x json field name, convert it to the newer field
+	// name which appears to work in all versions.
+	if l.V1ContainerConfig != nil {
+		l.V2ContainerConfig = l.V1ContainerConfig
+		l.V1ContainerConfig = nil
+		return l.V2ContainerConfig
+	}
+
+	l.V2ContainerConfig = &ContainerConfig{}
+
+	return l.V2ContainerConfig
 }
 
 // LoadExport loads a tarball export created by docker save.
@@ -244,7 +263,7 @@ func (e *Export) firstLayer(pattern string) *ExportedImage {
 			break
 		}
 
-		cmd := strings.Join(root.LayerConfig.ContainerConfig.Cmd, " ")
+		cmd := strings.Join(root.LayerConfig.ContainerConfig().Cmd, " ")
 		if strings.Contains(cmd, pattern) {
 			break
 		}
@@ -326,10 +345,11 @@ func (e *Export) PrintHistory() {
 			size = stat.Size()
 		}
 
-		cmd := strings.Join(order[i].LayerConfig.ContainerConfig.Cmd, " ")
+		cmd := strings.Join(order[i].LayerConfig.ContainerConfig().Cmd, " ")
 		if len(cmd) > 60 {
 			cmd = cmd[0:57] + "..."
 		}
+
 		debug("  - ", order[i].LayerConfig.Id[0:12],
 			humanDuration(time.Now().UTC().Sub(order[i].LayerConfig.Created.UTC())),
 			cmd, units.HumanSize(size))
@@ -343,7 +363,7 @@ func (e *Export) InsertLayer(parent string) (*ExportedImage, error) {
 	}
 
 	layerConfig := newLayerConfig(id, parent, "squashed w/ docker-squash")
-	layerConfig.ContainerConfig.Cmd = []string{"/bin/sh", "-c", fmt.Sprintf("#(squash) from %s", parent[:12])}
+	layerConfig.ContainerConfig().Cmd = []string{"/bin/sh", "-c", fmt.Sprintf("#(squash) from %s", parent[:12])}
 	entry := &ExportedImage{
 		Path:         filepath.Join(e.Path, id),
 		JsonPath:     filepath.Join(e.Path, id, "json"),
@@ -392,7 +412,7 @@ func (e *Export) ReplaceLayer(oldId string) (*ExportedImage, error) {
 	orig := e.Entries[oldId]
 	child := e.ChildOf(oldId)
 
-	cmd := strings.Join(orig.LayerConfig.ContainerConfig.Cmd, " ")
+	cmd := strings.Join(orig.LayerConfig.ContainerConfig().Cmd, " ")
 	if len(cmd) > 50 {
 		cmd = cmd[:47] + "..."
 	}
@@ -558,10 +578,11 @@ func (e *Export) rewriteChildren(entry *ExportedImage) error {
 			break
 		}
 
-		cmd := strings.Join(entry.LayerConfig.ContainerConfig.Cmd, " ")
+		cmd := strings.Join(entry.LayerConfig.ContainerConfig().Cmd, " ")
 		if len(cmd) > 50 {
 			cmd = cmd[:47] + "..."
 		}
+
 		if entry.LayerConfig.Id == squashId {
 			entry = e.ChildOf(entry.LayerConfig.Id)
 			continue
