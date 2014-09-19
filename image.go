@@ -18,13 +18,12 @@ type ExportedImage struct {
 
 func newLayerConfig(id, parent, comment string) *LayerConfig {
 	return &LayerConfig{
-		Id:              id,
-		Parent:          parent,
-		Comment:         comment,
-		Created:         time.Now().UTC(),
-		DockerVersion:   "0.1.2",
-		Architecture:    "x86_64",
-		ContainerConfig: &ContainerConfig{},
+		Id:            id,
+		Parent:        parent,
+		Comment:       comment,
+		Created:       time.Now().UTC(),
+		DockerVersion: "0.1.2",
+		Architecture:  "x86_64",
 	}
 }
 

@@ -145,7 +145,7 @@ func main() {
 			if e == nil {
 				break
 			}
-			cmd := strings.Join(e.LayerConfig.ContainerConfig.Cmd, " ")
+			cmd := strings.Join(e.LayerConfig.ContainerConfig().Cmd, " ")
 			if len(cmd) > 60 {
 				cmd = cmd[:60]
 			}
