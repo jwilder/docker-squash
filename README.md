@@ -104,7 +104,7 @@ Download the latest version:
 
 ```
 $ wget https://github.com/jwilder/docker-squash/releases/download/v0.0.9/docker-squash-linux-amd64-v0.0.9.tar.gz
-$ sudo tar -C /usr/local/bin -xzvf docker-gen-linux-amd64-v0.0.9.tar.gz
+$ sudo tar -C /usr/local/bin -xzvf docker-squash-linux-amd64-v0.0.9.tar.gz
 ```
 NOTE: docker-squash must run as root (to maintain file permission created within images).
 
