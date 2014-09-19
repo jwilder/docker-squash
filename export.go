@@ -338,7 +338,7 @@ func (e *Export) PrintHistory() {
 		}
 	}
 
-	for i := len(order) - 1; i >= 0; i-- {
+	for i := 0; i < len(order); i++ {
 		stat, err := os.Stat(order[i].LayerTarPath)
 		size := int64(-1)
 		if stat != nil && err == nil {
