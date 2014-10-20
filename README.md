@@ -4,9 +4,9 @@ docker-squash
 Squash docker images to make them smaller.
 
 docker-squash is a utility to squash multiple docker layers into one in order to create an image
-with fewer layers as well as smaller ones.  It retains Dockerfile commands such as PORT,
-ENV, etc.. so that squash images work the same as they were originally built.  In addition, deleted
-files in layer layers are actually purged from the image when squashed.
+with fewer and smaller layers.  It retains Dockerfile commands such as PORT,
+ENV, etc.. so that squashed images work the same as they were originally built.  In addition, deleted
+files in later layers are actually purged from the image when squashed.
 
 It's designed to support a workflow where you would squash the image just before pushing it
 to a registry.  Before squashing the image, you would remove any build time dependencies, extra
