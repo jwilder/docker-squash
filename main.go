@@ -58,10 +58,7 @@ func main() {
 		fatal(err)
 	}
 
-	if tag != "" {
-		if !strings.Contains(tag, ":") {
-			fatalf("bad tag format: %s\n", tag)
-		}
+	if tag != "" && strings.Contains(tag, ":") {
 		parts := strings.Split(tag, ":")
 		if parts[0] == "" || parts[1] == "" {
 			fatalf("bad tag format: %s\n", tag)
@@ -181,13 +178,20 @@ func main() {
 	}
 
 	if tag != "" {
+		tagPart := "latest"
+		repoPart := tag
 		parts := strings.Split(tag, ":")
+		if len(parts) > 1 {
+			repoPart = parts[0]
+			tagPart = parts[1]
+		}
 		tagInfo := TagInfo{}
 		layer := export.LastChild()
-		tagInfo[parts[1]] = layer.LayerConfig.Id
-		export.Repositories[parts[0]] = &tagInfo
 
-		debugf("Tagging %s as %s\n", layer.LayerConfig.Id[0:12], tag)
+		tagInfo[tagPart] = layer.LayerConfig.Id
+		export.Repositories[repoPart] = &tagInfo
+
+		debugf("Tagging %s as %s:%s\n", layer.LayerConfig.Id[0:12], repoPart, tagPart)
 		err := export.WriteRepositoriesJson()
 		if err != nil {
 			fatal(err)
