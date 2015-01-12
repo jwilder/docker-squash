@@ -100,7 +100,7 @@ Removing tempdir /tmp/docker-squash683466637
 Download the latest version:
 
 * [linux/amd64](https://github.com/jwilder/docker-squash/releases/download/v0.0.11/docker-squash-linux-amd64-v0.0.11.tar.gz)
-* OSX currently not tested.
+* OSX: see `osx_install.md` for instructions (tested on Yosemite).
 
 ```
 $ wget https://github.com/jwilder/docker-squash/releases/download/v0.0.11/docker-squash-linux-amd64-v0.0.11.tar.gz
