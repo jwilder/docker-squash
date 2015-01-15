@@ -352,7 +352,7 @@ func (e *Export) PrintHistory() {
 
 		debug("  - ", order[i].LayerConfig.Id[0:12],
 			humanDuration(time.Now().UTC().Sub(order[i].LayerConfig.Created.UTC())),
-			cmd, units.HumanSize(size))
+			cmd, units.HumanSize(float64(size)))
 	}
 }
 
