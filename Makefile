@@ -18,4 +18,5 @@ dist: dist-clean
 	mkdir -p dist/linux/amd64 && GOOS=linux GOARCH=amd64 go build -ldflags "$(LDFLAGS)" -o dist/linux/amd64/docker-squash
 
 release: dist
+	glock sync github.com/jwilder/docker-squash
 	tar -cvzf docker-squash-linux-amd64-$(TAG).tar.gz -C dist/linux/amd64 docker-squash

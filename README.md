@@ -157,6 +157,17 @@ If you are creating a base image or only want one final squashed layer, you can 
 $ docker save <image_id> | sudo docker-squash -from root -t newtag | docker load
 ```
 
+### Development
+
+This project uses [glock](https://github.com/robfig/glock) for managing 3rd party dependencies.
+You'll need to install glock into your workspace before hacking on docker-squash.
+
+```
+$ git clone <your fork>
+$ glock sync github.com/jwilder/docker-squash
+$ make
+```
+
 ## License
 
 MIT
