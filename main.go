@@ -29,12 +29,13 @@ func shutdown(tempdir string) {
 }
 
 func main() {
-	var from, input, output, tempdir, tag string
+	var from, input, output, tempdir, tag, baseTmpDir string
 	var keepTemp, version bool
 	flag.StringVar(&input, "i", "", "Read from a tar archive file, instead of STDIN")
 	flag.StringVar(&output, "o", "", "Write to a file, instead of STDOUT")
 	flag.StringVar(&tag, "t", "", "Repository name and tag for new image")
 	flag.StringVar(&from, "from", "", "Squash from layer ID (default: first FROM layer)")
+	flag.StringVar(&baseTmpDir, "tmpdir", "", "tmp directory (default: /tmp)")
 	flag.BoolVar(&keepTemp, "keepTemp", false, "Keep temp dir when done. (Useful for debugging)")
 	flag.BoolVar(&verbose, "verbose", false, "Enable verbose logging")
 	flag.BoolVar(&version, "v", false, "Print version information and quit")
@@ -53,7 +54,7 @@ func main() {
 	}
 
 	var err error
-	tempdir, err = ioutil.TempDir("", "docker-squash")
+	tempdir, err = ioutil.TempDir(baseTempDir, "docker-squash")
 	if err != nil {
 		fatal(err)
 	}
