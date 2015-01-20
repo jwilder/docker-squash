@@ -54,7 +54,7 @@ func main() {
 	}
 
 	var err error
-	tempdir, err = ioutil.TempDir(baseTempDir, "docker-squash")
+	tempdir, err = ioutil.TempDir(baseTmpDir, "docker-squash")
 	if err != nil {
 		fatal(err)
 	}
