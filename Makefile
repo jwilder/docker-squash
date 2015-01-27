@@ -1,8 +1,9 @@
 .SILENT :
 .PHONY : docker-squash clean fmt
 
-TAG:=`git describe --abbrev=0 --tags`
-LDFLAGS:=-X main.buildVersion $(TAG)
+SHELL := /bin/bash
+TAG := `git describe --always --dirty --tags`
+LDFLAGS := -X main.buildVersion $(TAG)
 
 all: docker-squash
 
@@ -15,8 +16,14 @@ dist-clean:
 	rm -f docker-squash-linux-*.tar.gz
 
 dist: dist-clean
-	mkdir -p dist/linux/amd64 && GOOS=linux GOARCH=amd64 go build -ldflags "$(LDFLAGS)" -o dist/linux/amd64/docker-squash
+	for os in linux darwin ; do \
+	  mkdir -p dist/$$os/amd64 && \
+	  GOOS=$$os GOARCH=amd64 go build -ldflags "$(LDFLAGS)" -o dist/$$os/amd64/docker-squash ; \
+	  done
 
 release: dist
 	glock sync github.com/jwilder/docker-squash
-	tar -cvzf docker-squash-linux-amd64-$(TAG).tar.gz -C dist/linux/amd64 docker-squash
+	for os in linux darwin ; do \
+	  tar -cvzf docker-squash-$${os}-amd64-$(TAG).tar.gz -C dist/$$os/amd64 docker-squash ; \
+	  done
+
