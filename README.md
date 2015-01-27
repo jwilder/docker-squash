@@ -100,72 +100,63 @@ Removing tempdir /tmp/docker-squash683466637
 Download the latest version:
 
 * [linux/amd64](https://github.com/jwilder/docker-squash/releases/download/v0.0.11/docker-squash-linux-amd64-v0.0.11.tar.gz)
-* OSX: see `osx_install.md` for instructions (tested on Yosemite).
+* OSX: (link to be added after the next release)
 
+```bash
+VERSION="v0.0.11" ; \
+  curl -sLf "https://github.com/jwilder/docker-squash/releases/download/${VERSION}/docker-squash-$(uname | tr '[:upper:]' '[:lower:]')-amd64-${VERSION}.tar.gz" | \
+  tar -xzf - -C /usr/local/bin
 ```
-$ wget https://github.com/jwilder/docker-squash/releases/download/v0.0.11/docker-squash-linux-amd64-v0.0.11.tar.gz
-$ sudo tar -C /usr/local/bin -xzvf docker-squash-linux-amd64-v0.0.11.tar.gz
-```
-NOTE: docker-squash must run as root (to maintain file permission created within images).
-
-Dependencies:
-
-* [tar 1.27](http://www.gnu.org/software/tar/)
 
 ## Usage
 
 docker-squash works by squashing a saved image and loading the squashed image back into docker.
 
-```
-$ docker save <image id> > image.tar
-$ sudo docker-squash -i image.tar -o squashed.tar
-$ cat squashed.tar | docker load
-$ docker images <new image id>
+```bash
+docker save <image id> > image.tar
+sudo docker-squash -i image.tar -o squashed.tar
+cat squashed.tar | docker load
+docker images <new image id>
 ```
 
 You can also tag the squashed image:
 
-```
-$ docker save <image id> > image.tar
-$ sudo docker-squash -i image.tar -o squashed.tar -t newtag
-$ cat squashed.tar | docker load
-$ docker images <new image id>
+```bash
+docker save <image id> > image.tar
+sudo docker-squash -i image.tar -o squashed.tar -t newtag
+cat squashed.tar | docker load
+docker images <new image id>
 ```
 
 You can reduce disk IO by piping the input and output to and from docker:
 
-```
-$ docker save <image id> | sudo docker-squash -t newtag | docker load
-```
-
-If you have a sufficient amount of RAM, you can also use a `tmpfs` to remove temporary
-disk storage:
-
-```
-$ docker save <image_id> | sudo TMPDIR=/var/run/shm docker-squash -t newtag | docker load
+```bash
+docker save <image id> | sudo docker-squash -t newtag | docker load
 ```
 
 By default, a squashed layer is inserted after the first `FROM` layer.  You can specify a different
 layer with the `-from` argument.
-```
-$ docker save <image_id> | sudo docker-squash -from <other layer> -t newtag | docker load
-```
-If you are creating a base image or only want one final squashed layer, you can use the
-`-from root` to squash the base layer and your changes into one layer.
 
-```
-$ docker save <image_id> | sudo docker-squash -from root -t newtag | docker load
+```bash
+docker save <image_id> | sudo docker-squash -from <other layer> -t newtag | docker load
 ```
 
-### Development
+<!--If you are creating a base image or only want one final squashed layer, you can use the-->
+<!--`-from root` to squash the base layer and your changes into one layer.-->
+
+<!--```bash-->
+<!--docker save <image_id> | sudo docker-squash -from root -t newtag | docker load-->
+<!--```-->
+
+## Development
 
 This project uses [glock](https://github.com/robfig/glock) for managing 3rd party dependencies.
 You'll need to install glock into your workspace before hacking on docker-squash.
 
-```
-$ git clone <your fork>
-$ glock sync github.com/jwilder/docker-squash
-$ make
+```bash
+git clone <your fork>
+glock sync github.com/jwilder/docker-squash
+make
 ```
 
 ## License
