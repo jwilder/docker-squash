@@ -13,7 +13,7 @@ docker-squash:
 
 dist-clean:
 	rm -rf dist
-	rm -f docker-squash-linux-*.tar.gz
+	rm -f docker-squash-*.tar.gz
 
 dist: dist-clean
 	for os in linux darwin ; do \
