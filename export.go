@@ -588,7 +588,7 @@ func (e *Export) rewriteChildren(entry *ExportedImage) error {
 			continue
 		}
 
-		if strings.Contains(cmd, "#(nop)") && !strings.Contains(cmd, "ADD") {
+		if strings.Contains(cmd, "#(nop)") && !(strings.Contains(cmd, "ADD") || strings.Contains(cmd, "COPY")) {
 			newEntry, err := e.ReplaceLayer(entry.LayerConfig.Id)
 			if err != nil {
 				return err
