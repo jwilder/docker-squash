@@ -272,12 +272,37 @@ func (e *Export) firstLayer(pattern string) *ExportedImage {
 	return root
 }
 
+func (e *Export) lastLayer(pattern string) *ExportedImage {
+	root := e.Root()
+	lastRoot := e.Root()
+	for {
+		if root == nil {
+			break
+		}
+
+		cmd := strings.Join(root.LayerConfig.ContainerConfig().Cmd, " ")
+		if strings.Contains(cmd, pattern) {
+			lastRoot = e.ChildOf(root.LayerConfig.Id)
+		}
+		root = e.ChildOf(root.LayerConfig.Id)
+	}
+	return lastRoot
+}
+
 func (e *Export) FirstFrom() *ExportedImage {
 	return e.firstLayer("#(nop) ADD file")
 }
 
+func (e *Export) LastFrom() *ExportedImage {
+	return e.lastLayer("#(nop) ADD file")
+}
+
 func (e *Export) FirstSquash() *ExportedImage {
 	return e.firstLayer("#(squash)")
+}
+
+func (e *Export) LastSquash() *ExportedImage {
+	return e.lastLayer("#(squash)")
 }
 
 // Root returns the top layer in the export
