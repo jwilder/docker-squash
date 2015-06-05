@@ -66,6 +66,7 @@ type ContainerConfig struct {
 	Image           string
 	Volumes         map[string]struct{}
 	VolumesFrom     string
+	Labels		map[string]string
 }
 
 type Config struct {
@@ -93,6 +94,7 @@ type Config struct {
 	WorkingDir      string
 	Entrypoint      []string
 	NetworkDisabled bool
+	Labels		map[string]string
 }
 
 type LayerConfig struct {
