@@ -11,7 +11,7 @@ files in later layers are actually purged from the image when squashed.
 It's designed to support a workflow where you would squash the image just before pushing it
 to a registry.  Before squashing the image, you would remove any build time dependencies, extra
 files (apt caches, logs, private keys, etc..) that you would not want to deploy.  The defaults also
-preseve your base image so that it's contents are not repeatedly transferred when pushing and pulling
+preserve your base image so that its contents are not repeatedly transferred when pushing and pulling
 images.
 
 Typical workflow is:
