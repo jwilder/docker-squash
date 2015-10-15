@@ -2,7 +2,7 @@
 .PHONY : docker-squash clean fmt
 
 TAG:=`git describe --abbrev=0 --tags`
-LDFLAGS:=-X main.buildVersion $(TAG)
+LDFLAGS:=-X main.buildVersion=$(TAG)
 
 all: docker-squash
 
