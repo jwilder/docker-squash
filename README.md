@@ -99,12 +99,13 @@ Removing tempdir /tmp/docker-squash683466637
 
 Download the latest version:
 
-* [linux/amd64](https://github.com/jwilder/docker-squash/releases/download/v0.1.0/docker-squash-linux-amd64-v0.1.0.tar.gz)
+* [linux/amd64](https://github.com/jwilder/docker-squash/releases/download/v0.2.0/docker-squash-linux-amd64-v0.2.0.tar.gz)
+* [darwin/amd64](https://github.com/jwilder/docker-squash/releases/download/v0.2.0/docker-squash-darwin-amd64-v0.2.0.tar.gz)
 * OSX: see `osx_install.md` for instructions (tested on Yosemite).
 
 ```
-$ wget https://github.com/jwilder/docker-squash/releases/download/v0.1.0/docker-squash-linux-amd64-v0.1.0.tar.gz
-$ sudo tar -C /usr/local/bin -xzvf docker-squash-linux-amd64-v0.1.0.tar.gz
+$ wget https://github.com/jwilder/docker-squash/releases/download/v0.2.0/docker-squash-linux-amd64-v0.2.0.tar.gz
+$ sudo tar -C /usr/local/bin -xzvf docker-squash-linux-amd64-v0.2.0.tar.gz
 ```
 NOTE: docker-squash must run as root (to maintain file permission created within images).
 
