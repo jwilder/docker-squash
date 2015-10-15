@@ -531,7 +531,7 @@ func (e *Export) TarLayers(w io.Writer) error {
 	}
 	defer os.Chdir(cwd)
 
-	cmd := exec.Command("sudo", "/bin/bash", "-c", "tar cOf  - *")
+	cmd := exec.Command("sudo", "/bin/sh", "-c", "tar cOf  - *")
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
 		return err
