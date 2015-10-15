@@ -66,7 +66,7 @@ type ContainerConfig struct {
 	Image           string
 	Volumes         map[string]struct{}
 	VolumesFrom     string
-	Labels		map[string]string
+	Labels          map[string]string
 }
 
 type Config struct {
@@ -94,7 +94,7 @@ type Config struct {
 	WorkingDir      string
 	Entrypoint      []string
 	NetworkDisabled bool
-	Labels		map[string]string
+	Labels          map[string]string
 }
 
 type LayerConfig struct {
@@ -502,11 +502,12 @@ func (e *Export) SquashLayers(to, from *ExportedImage) error {
 			println(string(out))
 			return err
 		}
-	}
-	debug("  -  Deleting whiteouts")
-	err = e.deleteWhiteouts(layerDir)
-	if err != nil {
-		return err
+
+		debug("  -  Deleting whiteouts for layer " + entry.LayerConfig.Id[:12])
+		err = e.deleteWhiteouts(layerDir)
+		if err != nil {
+			return err
+		}
 	}
 
 	debug("  -  Rewriting child history")
