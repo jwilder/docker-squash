@@ -16,7 +16,7 @@ git clone https://github.com/jwilder/docker-squash.git
 Install the units package:
 
 ```bash
-go get github.com/docker/docker/pkg/units
+go get "github.com/docker/go-units"
 ```
 
 Build the binary:
