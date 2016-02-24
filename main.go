@@ -30,11 +30,12 @@ func shutdown(tempdir string) {
 
 func main() {
 	var from, input, output, tempdir, tag string
-	var keepTemp, version bool
+	var keepTemp, version, last bool
 	flag.StringVar(&input, "i", "", "Read from a tar archive file, instead of STDIN")
 	flag.StringVar(&output, "o", "", "Write to a file, instead of STDOUT")
 	flag.StringVar(&tag, "t", "", "Repository name and tag for new image")
 	flag.StringVar(&from, "from", "", "Squash from layer ID (default: first FROM layer)")
+	flag.BoolVar(&last, "last", false, "Squash from last found layer ID (Inverts order for automatic root-layer selection")
 	flag.BoolVar(&keepTemp, "keepTemp", false, "Keep temp dir when done. (Useful for debugging)")
 	flag.BoolVar(&verbose, "verbose", false, "Enable verbose logging")
 	flag.BoolVar(&version, "v", false, "Print version information and quit")
@@ -92,10 +93,19 @@ func main() {
 
 	}
 
-	start := export.FirstSquash()
-	// Can't find a previously squashed layer, use first FROM
-	if start == nil {
-		start = export.FirstFrom()
+	var start *ExportedImage
+	if last {
+		start = export.LastSquash()
+		// Can't find a previously squashed layer, use last FROM
+		if start == nil {
+			start = export.LastFrom()
+		}
+	} else {
+		start = export.FirstSquash()
+		// Can't find a previously squashed layer, use first FROM
+		if start == nil {
+			start = export.FirstFrom()
+		}
 	}
 	// Can't find a FROM, default to root
 	if start == nil {
