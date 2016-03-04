@@ -22,6 +22,7 @@ go get github.com/docker/go-units
 Build the binary:
 
 ```bash
+brew install gnu-tar
 GOBIN=$(pwd) make
 ```
 
