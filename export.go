@@ -16,7 +16,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/docker/docker/pkg/units"
+	"github.com/docker/go-units"
 )
 
 type TagInfo map[string]string
