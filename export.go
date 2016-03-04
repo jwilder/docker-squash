@@ -16,7 +16,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/docker/docker/pkg/units"
+	"github.com/docker/go-units"
 )
 
 type TagInfo map[string]string
@@ -557,7 +557,7 @@ func (e *Export) TarLayers(w io.Writer) error {
 	}
 	defer os.Chdir(cwd)
 
-	cmd := exec.Command("sudo", "/bin/sh", "-c", "tar cOf  - *")
+	cmd := exec.Command("sudo", "/bin/sh", "-c", "gtar cOf  - *")
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
 		return err

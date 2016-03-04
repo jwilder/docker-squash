@@ -14,7 +14,7 @@ import (
 )
 
 func extractTar(src, dest string) ([]byte, error) {
-	cmd := exec.Command("tar", "--same-owner", "--xattrs", "--overwrite",
+	cmd := exec.Command("gtar", "--same-owner", "--xattrs", "--overwrite",
 		"--preserve-permissions", "-xf", src, "-C", dest)
 	return cmd.CombinedOutput()
 }
