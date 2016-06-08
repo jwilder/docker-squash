@@ -219,6 +219,10 @@ func main() {
 	} else {
 		debugf("Tarring new image to STDOUT\n")
 	}
+
+	// Update manifest
+	updateManifest(export, tag)
+
 	// bundle up the new image
 	err = export.TarLayers(ow)
 	if err != nil {
@@ -231,4 +235,20 @@ func main() {
 
 	signals <- os.Interrupt
 	wg.Wait()
+}
+
+func updateManifest(export *Export, tag string) {
+	manifestor, err := NewManifestor(export, tag)
+	if err != nil {
+		fatal(err)
+	}
+
+	manifestor.GenerateLayers()
+	manifestor.UpdateManifest()
+	manifestor.UpdateConfig()
+
+	err = manifestor.SaveChanges()
+	if err != nil {
+		fatal(err)
+	}
 }
