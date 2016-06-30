@@ -101,7 +101,7 @@ Download the latest version:
 
 * [linux/amd64](https://github.com/jwilder/docker-squash/releases/download/v0.2.0/docker-squash-linux-amd64-v0.2.0.tar.gz)
 * [darwin/amd64](https://github.com/jwilder/docker-squash/releases/download/v0.2.0/docker-squash-darwin-amd64-v0.2.0.tar.gz)
-* OSX: see `osx_install.md` for instructions (tested on Yosemite).
+* OSX: see [`osx_install.md`](https://github.com/jwilder/docker-squash/blob/master/osx_install.md) for instructions (tested on Yosemite).
 
 ```
 $ wget https://github.com/jwilder/docker-squash/releases/download/v0.2.0/docker-squash-linux-amd64-v0.2.0.tar.gz
