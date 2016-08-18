@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"os/exec"
 	"time"
@@ -80,7 +81,7 @@ func (e *ExportedImage) TarLayer() error {
 	}
 	defer os.Chdir(cwd)
 
-	cmd := exec.Command("sudo", "/bin/sh", "-c", "tar cvf ../layer.tar ./")
+	cmd := exec.Command("sudo", "/bin/sh", "-c", fmt.Sprintf("%s cvf ../layer.tar ./", TarCmd))
 	out, err := cmd.CombinedOutput()
 	if err != nil {
 		println(string(out))
