@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/signal"
 	"strings"
+	"regexp"
 	"sync"
 	"syscall"
 )
@@ -59,9 +60,10 @@ func main() {
 		fatal(err)
 	}
 
+	var tagRegExp = regexp.MustCompile("^(.*):(.*)$")
 	if tag != "" && strings.Contains(tag, ":") {
-		parts := strings.Split(tag, ":")
-		if parts[0] == "" || parts[1] == "" {
+		parts := tagRegExp.FindStringSubmatch(tag)
+		if parts[1] == "" || parts[2] == "" {
 			fatalf("bad tag format: %s\n", tag)
 		}
 	}
@@ -190,10 +192,10 @@ func main() {
 	if tag != "" {
 		tagPart := "latest"
 		repoPart := tag
-		parts := strings.Split(tag, ":")
-		if len(parts) > 1 {
-			repoPart = parts[0]
-			tagPart = parts[1]
+		parts := tagRegExp.FindStringSubmatch(tag)
+		if len(parts) > 2 {
+			repoPart = parts[1]
+			tagPart = parts[2]
 		}
 		tagInfo := TagInfo{}
 		layer := export.LastChild()
