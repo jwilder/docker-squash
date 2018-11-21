@@ -1,2 +1,2 @@
-github.com/docker/docker v0.0.0-20151007003607-2606a2e4d3bf h1:LrZAaBsZ/9j+oykLvc+S9ml3M8pabdaiWBORKSF3vg0=
-github.com/docker/docker v0.0.0-20151007003607-2606a2e4d3bf/go.mod h1:eEKB0N0r5NX/I1kEveEz05bcu8tLC/8azJZsviup8Sk=
+github.com/docker/go-units v0.3.3 h1:Xk8S3Xj5sLGlG5g67hJmYMmUgXv5N4PhkjJHHqrwnTk=
+github.com/docker/go-units v0.3.3/go.mod h1:fgPhTUdO+D/Jk86RDLlptpiXQzgHJF7gydDDbaIK4Dk=
