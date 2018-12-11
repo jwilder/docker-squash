@@ -81,7 +81,7 @@ func (e *ExportedImage) TarLayer() error {
 	}
 	defer os.Chdir(cwd)
 
-	cmd := exec.Command("sudo", "/bin/sh", "-c", fmt.Sprintf("%s cvf ../layer.tar ./", TarCmd))
+	cmd := exec.Command("/bin/sh", "-c", fmt.Sprintf("%s cvf ../layer.tar ./", TarCmd))
 	out, err := cmd.CombinedOutput()
 	if err != nil {
 		println(string(out))
