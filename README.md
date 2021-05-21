@@ -1,3 +1,5 @@
+# This is project is no longer under development
+
 docker-squash
 =============
 
